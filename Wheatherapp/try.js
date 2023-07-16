@@ -6,11 +6,15 @@ const deleteWeatherInfo = () => {
     main_Division.removeChild(main_Division.firstChild);
   }
 };
-function currentData() {
+function currentData(timezone) {
   let currentDate = new Date();
-  let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  let currentDayAndDate = currentDate.toLocaleDateString(undefined, options);
-  document.getElementById('current-day-and-date').textContent = currentDayAndDate;
+  let utcOffset = currentDate.getTimezoneOffset() * 60 * 1000;
+  let cityOffset = timezone * 1000;
+  let currentTimestamp = currentDate.getTime() + utcOffset + cityOffset;
+  let localDate = new Date(currentTimestamp);
+  let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+  let formattedDate = localDate.toLocaleDateString(undefined, options);
+  document.getElementById('current-day-and-date').textContent = formattedDate;
 }
 const done = async (cityname = "Southampton") => {
   console.log("city name ", cityname);
@@ -20,7 +24,7 @@ const done = async (cityname = "Southampton") => {
   const data = await doing.json();
   console.log(data)
   if (data.cod != 200) {
-    alert("error")
+    alert("Error!.The name of the city is invalid!")
     return;
   }
   
@@ -32,19 +36,20 @@ const done = async (cityname = "Southampton") => {
 <img src="http://openweathermap.org/img/w/${data.weather[0].icon}.png" alt="Weather Icon">
 <div class="des" style="font-size:12px"><i>${data.weather[0].description}</i></div>
 <div style="font-size:1.5rem" class="weather-info.country">${data.name}</div>
-<div > ${data.main.temp}°C</div> 
+<div style="font-size:35px" > ${data.main.temp}°C</div> 
 <div class=descriptionBox>
+<div id="current-day-and-date"><i></i></div>
   <div class="weather-info"> Pressure: ${data.main.pressure}mBar</div>
   <div class="weather-info">Windspeed: ${data.wind.speed}m/s</div>
   <div class="weather-info">Humidity: ${data.main.humidity}%</div>
-  <div id="current-day-and-date"></div>
+  
 <div>
 <div>
 `;
 
 
 main_Division.append(built);
-currentData()
+currentData(data.timezone)
   console.log(main_Division);
   console.log(data);
 };

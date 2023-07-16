@@ -102,4 +102,17 @@ img {
   margin-bottom: 3px;
   color:  #757575;
 }
+#current-day-and-date{
+  font-size: 12px;
+  font-style: italic;
+  margin-bottom: 5px;
+  color: rgb(130, 59, 59);
+}
 
+.weather-info{
+  font-size: 15px;
+  text-align: center;
+}
+#current-day-and-date{
+  font-size: 15px;
+}
